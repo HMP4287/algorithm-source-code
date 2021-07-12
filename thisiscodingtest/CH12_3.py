@@ -23,12 +23,31 @@ def solution(s):
         if min_temp < min_total:
             min_total = min_temp
     return min_total
-
-
-
-
-
-
-
-
 print(solution("abcabcdede"))
+
+
+# 답안
+# def solution(s):
+#     answer = len(s)
+#     for step in range(1, len(s)//2+1):
+#         print(step)
+#         compressed = ""
+#         prev = s[0:step]
+#         count = 1
+#
+#         for j in range(step, len(s), step):
+#             if prev == s[j:j+step]:
+#                 count += 1
+#             else:
+#                 compressed += str(count) + prev if count >= 2 else prev
+#                 prev = s[j: j+step]
+#                 count = 1
+#         compressed += str(count) + prev if count >= 2 else prev
+#         answer = min(answer, len(compressed))
+#     return answer
+# compressed = ""
+# compressed += str(5) + "abc" if 1 >= 2 else "abc"
+# print(compressed)
+# print(solution("abcabcdede"))
+
+
