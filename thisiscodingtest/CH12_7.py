@@ -12,7 +12,24 @@ for i in range(n):
         if map_arr[i][j] == 1:
             home.append([i+1, j+1])
         elif map_arr[i][j] == 2:
-            chicken.append([i+1, j+1])  # [2]는 진입 차수
+            chicken.append([i+1, j+1])
+
+best = mid = h_shortest = 1e9  # 100이면 충분할것이라고 생각했으나 아님. 1e9를 사용하자
+for i in range(m):
+    result = list(itertools.combinations(chicken, i+1))
+    for c in result:
+        mid = 0
+        # 다 더하는데, c의 요소가 여러개일 때((2, 3) or( 4, 5))는 요소들중에서 작은 값을 찾아서 더해야함
+        for h in home:
+            h_shortest = 1e9
+            for sc in c:
+                path = abs(h[0] - sc[0]) + abs(h[1] - sc[1])
+                if path < h_shortest:
+                    h_shortest = path
+            mid += h_shortest
+        if mid < best:
+            best = mid
+print(best)
 
 # 0 1 2 3 4
 # doing
@@ -33,25 +50,6 @@ for i in range(n):
 #     if total2 < total1:
 #         total1 = total2
 # print(total1)
-
-best = mid = h_shortest = 1e9
-for i in range(m):
-    result = list(itertools.combinations(chicken, i+1))
-    for c in result:
-        mid = 0
-        # 다 더하는데, 여러개 요소일 떄는 요소들중에서 작은 값을 구해서 더해야함
-        for h in home:
-            h_shortest =  1e9
-            for sc in c:
-                path = abs(h[0] - sc[0]) + abs(h[1] - sc[1])
-                if path < h_shortest:
-                    h_shortest = path
-            mid += h_shortest
-        if mid < best:
-            best = mid
-print(best)
-
-
 
 
 
