@@ -26,3 +26,5 @@ print("정답은 " + str(answer) + " 입니다", end="\n")
 answer = 7
 print(f"정답은 {answer} 입니다")
 
+n, k = map(int, input().rstrip().split())
+arr = [list(map(int, input().rstrip().split())) for _ in range(n)]
