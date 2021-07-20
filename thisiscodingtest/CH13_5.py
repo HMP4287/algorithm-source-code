@@ -1,6 +1,5 @@
 import itertools
 
-
 def calculate(operation, last, now):
     if operation == 0:
         return last + now
