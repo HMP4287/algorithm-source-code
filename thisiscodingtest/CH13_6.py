@@ -1,7 +1,4 @@
 import itertools
-from collections import deque
-import copy
-
 # 상하좌우
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
@@ -34,101 +31,46 @@ for i in range(n):
             stu_list.append((i, j))
         pos.append((i, j))
 
-
-def bfs_v2(x, y):
-    if x >= n or y >= n or x < 0 or y < 0:
-        return
-    # if not visited[x][y]:
-    #     visited[x][y] = True
-    for i in range(4):
-        if x + dx[i] >= n or y + dy[i] >= n or x + dx[i] < 0 or y + dy[i] < 0:
-            if not visited[x + dx[i]][y + dy[i]]:
-                bfs_v2(x + dx[i], y + dy[i])
-                visited[x + dx[i]][y + dy[i]] = True
-
-
-def bfs_v3(x, y):
-    s = []
-    s.append((x, y))
-    while s:
-        p = s.pop()
-        for i in range(4):
-            next_x = p[0] + dx[i]
-            next_y = p[1] + dy[i]
-            if next_x >= n or next_y >= n or next_x < 0 or next_y < 0:
-                if not visited[next_x][next_y]:
-                    s.append(next_x, next_y)
-                    visited[next_x][next_y] = True
-
-
-def bfs_v4(x, y, path):
-    # if x >= n or y >= n or x < 0 or y < 0:
-    #     return
-    next_x = x + dx[path]
-    next_y = y + dy[path]
-    if next_x < n and next_y < n and next_x >= 0 and next_y >= 0:
-        if not visited[next_x][next_y]:
-            visited[next_x][next_y] = True
-            bfs_v4(next_x, next_y, path)
-    return
-
-    # while s:
-    #     p = s.pop()
-    #     for i in range(4):
-    #         next_x = p[0] + dx[i]
-    #         next_y = p[1] + dy[i]
-    #         if next_x >= n or next_y >= n or next_x < 0 or next_y < 0:
-    #             if not visited[next_x][next_y]:
-    #                 s.append(next_x, next_y)
-    #                 visited[next_x][next_y] = True
-
-
-def bfs(visited, x, y, t):
-    q = deque([(x, y)])
-
-    while q:
-        p = q.popleft()
-        for idx in range(4):
-            next_x = p[0] + dx[idx]
-            next_y = p[1] + dy[idx]
-            if next_x >= n or next_y >= n or next_x < 0 or next_y < 0:
-                continue
-            if visited[next_x][next_y]:
-                continue
-            else:
-                visited[next_x][next_y] = True
-                q.append((next_x, next_y))
-                if t == 1:
-                    print("n = ", end=" ")
-                    print(next_x, next_y)
-    if t == 1:
-        print("done")
-
-
 # 3개 장애물 설치 모든 경우의 수, 6*6중에서 3개 36c3, X 중복
 result = list(itertools.combinations(pos, 3))
 ok = False
 for wall_1, wall_2, wall_3 in result:
-
     if map_arr[wall_1[0]][wall_1[1]] != X or map_arr[wall_2[0]][wall_2[1]] != X or map_arr[wall_3[0]][wall_3[1]] != X:
         continue
-    visited = copy.deepcopy(base_visited)
-    # 벽 세우기 1,1 3,0 2,2
-    visited[wall_1[0]][wall_1[1]] = True
-    visited[wall_2[0]][wall_2[1]] = True
-    visited[wall_3[0]][wall_3[1]] = True
 
+    del_data = []
+    del_data.append((wall_1[0], wall_1[1], map_arr[wall_1[0]][wall_1[1]]))
+    del_data.append((wall_2[0], wall_2[1], map_arr[wall_2[0]][wall_2[1]]))
+    del_data.append((wall_3[0], wall_3[1], map_arr[wall_3[0]][wall_3[1]]))
+
+    # 벽 세우기
+    map_arr[wall_1[0]][wall_1[1]] = O
+    map_arr[wall_2[0]][wall_2[1]] = O
+    map_arr[wall_3[0]][wall_3[1]] = O
+
+    check = True
     for tea_pos in tea_list:
         for i in range(4):
-            bfs_v4(tea_pos[0], tea_pos[1], i)
-    tf = True
-    for stu_pos in stu_list:
-        if visited[stu_pos[0]][stu_pos[1]]:
-            tf = False
-            break
-    if tf:
+            next_x = tea_pos[0] + dx[i]
+            next_y = tea_pos[1] + dy[i]
+            while next_x < n and next_y < n and next_x >= 0 and next_y >= 0:
+                if map_arr[next_x][next_y] == S:
+                    check = False
+                    break
+                if map_arr[next_x][next_y] == O:
+                    break
+                next_x = next_x + dx[i]
+                next_y = next_y + dy[i]
+    # 한 번도 T가 S를 잡지 않았다면, 즉 학생 모두 생존
+    if check:
         ok = True
         break
+
+    # 벽 복구
+    length = len(del_data)
+    for _ in range(length):
+        xx, yy, zz = del_data.pop()
+        map_arr[xx][yy] = zz
 
 if ok:
     print("YES")
