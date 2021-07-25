@@ -1,3 +1,4 @@
+# 미완성
 from collections import deque
 
 n, l, r = map(int, input().split())
