@@ -1,5 +1,5 @@
 import sys
-# loop
+
 def bst(target, start, end):
     while start <= end:
         mid = (start + end) // 2
@@ -10,7 +10,6 @@ def bst(target, start, end):
         else:
             end = mid - 1
     return -1
-
 
 N = int(input())
 nums = list(map(int, sys.stdin.readline().split()))
